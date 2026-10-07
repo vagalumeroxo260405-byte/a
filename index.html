@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Para Sarha ❤️</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+body{overflow:hidden;background:linear-gradient(135deg,#fff0f5,#ffe4ec 45%,#fce7f3);color:#5b1630}
+.app{min-height:100vh;display:grid;place-items:center;padding:24px;position:relative}
+.heart{position:absolute;font-size:22px;opacity:.35;animation:float 6s ease-in-out infinite}
+.h1{font-size:clamp(48px,9vw,92px);margin:0 0 10px;font-weight:800;letter-spacing:-3px}
+.sub{font-size:clamp(18px,3vw,25px);margin:0 0 34px;color:#7d3150}
+.card{width:min(680px,94vw);text-align:center;padding:48px 28px 42px;border-radius:30px;background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);box-shadow:0 25px 80px rgba(133,34,75,.18);backdrop-filter:blur(12px)}
+.question{font-size:clamp(25px,5vw,40px);font-weight:750;margin:0 0 32px}
+.buttons{position:relative;height:220px;width:100%;display:flex;justify-content:center;align-items:center;gap:22px}
+.btn{border:0;border-radius:999px;padding:16px 34px;font-size:18px;font-weight:700;cursor:pointer;transition:.2s;box-shadow:0 10px 25px rgba(80,20,45,.15)}
+#yes{background:#e83e75;color:white;position:relative;z-index:2}
+#yes:hover{transform:scale(1.06)}
+#no{background:white;color:#9b3156;position:relative;z-index:3}
+.note{margin-top:22px;font-size:14px;color:#9b6074}
+.success{display:none;font-size:25px;font-weight:700;margin-top:25px;animation:pop .5s ease}
+.spark{font-size:40px}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-25px) rotate(8deg)}}
+@keyframes pop{0%{transform:scale(.5);opacity:0}100%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="heart" style="top:10%;left:10%">♥</div>
+<div class="heart" style="top:18%;right:12%;animation-delay:1s">♥</div>
+<div class="heart" style="bottom:13%;left:17%;animation-delay:2s">♥</div>
+<div class="heart" style="bottom:10%;right:18%;animation-delay:3s">♥</div>
+
+<main class="card">
+<div class="spark">💗</div>
+<h1 class="h1">Eu te amo, Sarha!</h1>
+<p class="sub">E eu tenho uma perguntinha muito importante...</p>
+<p class="question">Você quer ser minha para sempre? 🥹❤️</p>
+
+<div class="buttons" id="area">
+<button class="btn" id="yes">SIM! 💕</button>
+<button class="btn" id="no">Não 😢</button>
+</div>
+
+<div class="success" id="success">EU SABIA! 😭❤️<br><small>Então agora é para sempre.</small></div>
+<p class="note">P.S.: Acho que o botão “não” está meio tímido...</p>
+</main>
+</div>
+
+<script>
+const no=document.getElementById('no');
+const area=document.getElementById('area');
+const yes=document.getElementById('yes');
+const success=document.getElementById('success');
+
+function fugir(){
+    const areaRect=area.getBoundingClientRect();
+    const yesRect=yes.getBoundingClientRect();
+    const noRect=no.getBoundingClientRect();
+
+    const noWidth=noRect.width;
+    const noHeight=noRect.height;
+
+    const padding=10;
+    const minDistance=100;
+
+    const yesLeft=yesRect.left-areaRect.left;
+    const yesTop=yesRect.top-areaRect.top;
+    const yesRight=yesLeft+yesRect.width;
+    const yesBottom=yesTop+yesRect.height;
+
+    const maxX=areaRect.width-noWidth-padding;
+    const maxY=areaRect.height-noHeight-padding;
+
+    let escolhido=null;
+
+    for(let i=0;i<300;i++){
+        const x=padding+Math.random()*Math.max(0,maxX-padding);
+        const y=padding+Math.random()*Math.max(0,maxY-padding);
+
+        const noLeft=x;
+        const noTop=y;
+        const noRight=x+noWidth;
+        const noBottom=y+noHeight;
+
+        const overlap=!(
+            noRight<yesLeft ||
+            noLeft>yesRight ||
+            noBottom<yesTop ||
+            noTop>yesBottom
+        );
+
+        const noCenterX=noLeft+noWidth/2;
+        const noCenterY=noTop+noHeight/2;
+        const yesCenterX=yesLeft+yesRect.width/2;
+        const yesCenterY=yesTop+yesRect.height/2;
+
+        const distance=Math.hypot(
+            noCenterX-yesCenterX,
+            noCenterY-yesCenterY
+        );
+
+        if(!overlap && distance>=minDistance){
+            escolhido={x,y};
+            break;
+        }
+    }
+
+    if(!escolhido){
+        escolhido={x:10,y:10};
+    }
+
+    no.style.position='absolute';
+    no.style.left=escolhido.x+'px';
+    no.style.top=escolhido.y+'px';
+}
+
+no.addEventListener('mouseenter',fugir);
+no.addEventListener('pointerdown',function(e){
+    e.preventDefault();
+    fugir();
+});
+
+yes.addEventListener('click',function(){
+    success.style.display='block';
+    yes.textContent='💖 SIM, PARA SEMPRE! 💖';
+    no.style.display='none';
+    document.querySelector('.note').textContent='Agora não tem mais volta. 😌❤️';
+});
+</script>
+</body>
+</html>
